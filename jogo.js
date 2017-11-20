@@ -49,7 +49,7 @@ function embaralha() {
 }
 
 function terminouEmbaralhar() {
-    return embaralhamentos === vezes;
+    return embaralhamentos >= vezes;
 }
 
 function renderPosicao(i, j, fillColor) {
