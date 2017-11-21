@@ -71,7 +71,6 @@ function embaralhaInvisivel(vezes) {
             mexe(randomI, randomJ);
         } else {
             i--;
-            pulou++;
         }
     }
    //console.log('Tempo: ' + (Date.now() - then));
