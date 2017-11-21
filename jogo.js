@@ -48,6 +48,29 @@ function embaralha() {
 	embaralhamentos++;
 }
 
+//TO-DO: substituir embaralhar() por esta versão
+function embaralhaInvisivel(vezes) {
+    var randomI, randomJ, vertical;
+    //var then = Date.now();
+    for (var i = 0; i < vezes; i++) {
+        randomI = randomJ = undefined;
+        vertical = random([true, false]);
+        if (vertical) {
+            randomJ = vazioJ;
+            while (!dentroTabuleiro(randomI, randomJ)) {
+                randomI = vazioI + random([-1, 1]);
+            }
+        } else { // horizontal
+            randomI = vazioI;
+            while (!dentroTabuleiro(randomI, randomJ)) {
+                randomJ = vazioJ + random([-1, 1]);
+            }
+        }
+        mexe(randomI, randomJ);
+    }
+    //console.log(Date.now() - then);
+}
+
 function terminouEmbaralhar() {
     return embaralhamentos >= vezes;
 }
