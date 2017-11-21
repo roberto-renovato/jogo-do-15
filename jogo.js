@@ -45,12 +45,12 @@ function embaralha() {
         }
     }
     mexe(randomI, randomJ);
-	embaralhamentos++;
+    embaralhamentos++;
 }
 
 //TO-DO: substituir embaralhar() por esta versão
 function embaralhaInvisivel(vezes) {
-    var randomI, randomJ, vertical;
+    var randomI, randomJ, vertical, ultimoMexido;
     //var then = Date.now();
     for (var i = 0; i < vezes; i++) {
         randomI = randomJ = undefined;
@@ -66,9 +66,15 @@ function embaralhaInvisivel(vezes) {
                 randomJ = vazioJ + random([-1, 1]);
             }
         }
-        mexe(randomI, randomJ);
+        if (tabuleiro[randomI][randomJ] !== ultimoMexido) {
+            ultimoMexido = tabuleiro[randomI][randomJ];
+            mexe(randomI, randomJ);
+        } else {
+            i--;
+            pulou++;
+        }
     }
-    //console.log(Date.now() - then);
+   //console.log('Tempo: ' + (Date.now() - then));
 }
 
 function terminouEmbaralhar() {
