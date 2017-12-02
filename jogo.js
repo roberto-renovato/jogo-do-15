@@ -1,15 +1,8 @@
 var TAMANHO = 100;
-var tabuleiro, referencia, ganhou, vazioI, vazioJ, embaralhamentos, vezes;
-
-function inicializa() {
-    tabuleiro = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]];
-    referencia = JSON.stringify(tabuleiro);
-    ganhou = false;
-    vazioI = vazioJ = 3;
-    embaralhamentos = 0;
-    var resposta = prompt("Quantas vezes voce quer embaralhar?", 100);
-    vezes = (resposta === null)? 0 : Number.parseInt(resposta);
-}
+var tabuleiro = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]];
+var referencia = JSON.stringify(tabuleiro);
+var vazioI = vazioJ = 3;
+var ganhou = false;
 
 function dentroTabuleiro(i, j) {
 	return i >= 0 && i <=3 && j >= 0 && j <=3;
@@ -30,28 +23,8 @@ function mexe(i, j) {
 	vazioJ = j;
 }
 
-function embaralha() {
-    var randomI, randomJ;
-    var vertical = random([true, false]);
-    if (vertical) {
-		randomJ = vazioJ;
-        while (!dentroTabuleiro(randomI, randomJ)) {
-            randomI = vazioI + random([-1, 1]);
-        }
-	} else { // horizontal
-		randomI = vazioI;
-        while (!dentroTabuleiro(randomI, randomJ)) {
-            randomJ = vazioJ + random([-1, 1]);
-        }
-    }
-    mexe(randomI, randomJ);
-    embaralhamentos++;
-}
-
-//TO-DO: substituir embaralhar() por esta versão
-function embaralhaInvisivel(vezes) {
+function embaralha(vezes) {
     var randomI, randomJ, vertical, ultimoMexido;
-    //var then = Date.now();
     for (var i = 0; i < vezes; i++) {
         randomI = randomJ = undefined;
         vertical = random([true, false]);
@@ -73,11 +46,6 @@ function embaralhaInvisivel(vezes) {
             i--;
         }
     }
-   //console.log('Tempo: ' + (Date.now() - then));
-}
-
-function terminouEmbaralhar() {
-    return embaralhamentos >= vezes;
 }
 
 function renderPosicao(i, j, fillColor) {
@@ -94,36 +62,33 @@ function renderiza() {
     for(var i = 0; i < 4; i++) {
         for(var j = 0; j < 4; j++) {
             if (!vazio(i ,j)) {
-                renderPosicao(i ,j, terminouEmbaralhar()? "#fffcd1" : "#ffe4e4");
+                renderPosicao(i ,j, "#fffcd1");
             }
         }
     }
 }
 
 function setup() {
-    inicializa();
     createCanvas(TAMANHO * 4 + 1, TAMANHO * 4 + 1);
+    embaralha(1000);
 }
 
 function mouseClicked() {
-	if (terminouEmbaralhar()) {
-        var i = floor(mouseY / TAMANHO);
-        var j = floor(mouseX / TAMANHO);
-        if (dentroTabuleiro(i, j) && vazioAdjacente(i, j)) {
-            mexe(i, j);
-            ganhou = JSON.stringify(tabuleiro) === referencia;
-        }
-	}
+    var i = floor(mouseY / TAMANHO);
+    var j = floor(mouseX / TAMANHO);
+    if (dentroTabuleiro(i, j) && vazioAdjacente(i, j)) {
+        mexe(i, j);
+        ganhou = JSON.stringify(tabuleiro) === referencia;
+    }
 }
 
 function draw() { // Game loop
-    if (!terminouEmbaralhar()) {
-        embaralha();
-    } else if (ganhou) {
+    if (ganhou) {
 		requestAnimationFrame(function () {
             alert("Você ganhou!!!");
-			inicializa();
-		});
+            embaralha(1000);
+        });
+        ganhou = false;
 	}
     renderiza();
 }
