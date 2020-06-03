@@ -5,7 +5,7 @@ var vazioI = vazioJ = 3;
 var ganhou = false;
 
 function dentroTabuleiro(i, j) {
-	return i >= 0 && i <=3 && j >= 0 && j <=3;
+    return i >= 0 && i <=3 && j >= 0 && j <=3;
 }
 
 function vazio(i, j) {
@@ -20,7 +20,7 @@ function mexe(i, j) {
     tabuleiro[vazioI][vazioJ] = tabuleiro[i][j];
     tabuleiro[i][j] = 0;
     vazioI = i;
-	vazioJ = j;
+    vazioJ = j;
 }
 
 function embaralha(vezes) {
@@ -30,16 +30,12 @@ function embaralha(vezes) {
         vertical = random([true, false]);
         if (vertical) {
             randomJ = vazioJ;
-            while (!dentroTabuleiro(randomI, randomJ)) {
-                randomI = vazioI + random([-1, 1]);
-            }
+            randomI = vazioI + random([-1, 1]);
         } else { // horizontal
             randomI = vazioI;
-            while (!dentroTabuleiro(randomI, randomJ)) {
-                randomJ = vazioJ + random([-1, 1]);
-            }
+            randomJ = vazioJ + random([-1, 1]);
         }
-        if (tabuleiro[randomI][randomJ] !== ultimoMexido) {
+        if (dentroTabuleiro(randomI, randomJ) && tabuleiro[randomI][randomJ] !== ultimoMexido) {
             ultimoMexido = tabuleiro[randomI][randomJ];
             mexe(randomI, randomJ);
         } else {
@@ -48,29 +44,35 @@ function embaralha(vezes) {
     }
 }
 
-function renderPosicao(i, j, fillColor) {
-    fill(fillColor);
+function renderizaPosicao(i, j) {
+    fill("#ffcc4d");
+    stroke("#ca7f10");
     rect(j * TAMANHO, i * TAMANHO, TAMANHO, TAMANHO);
-    fill("black");
+    fill("#ca7f10");
     textSize(TAMANHO/2);
     textAlign(CENTER, CENTER);
     text(tabuleiro[i][j], j * TAMANHO + TAMANHO/2, i * TAMANHO + TAMANHO/2);
 }
 
-function renderiza() {
-    background(153);
+function renderizaTabuleiro() {
+    background("#ca7f10");
     for(var i = 0; i < 4; i++) {
         for(var j = 0; j < 4; j++) {
             if (!vazio(i ,j)) {
-                renderPosicao(i ,j, "#fffcd1");
+                renderizaPosicao(i ,j);
             }
         }
     }
 }
 
+function reset() {
+    ganhou = false;
+    embaralha(1000);
+}
+
 function setup() {
     createCanvas(TAMANHO * 4 + 1, TAMANHO * 4 + 1);
-    embaralha(1000);
+    reset();
 }
 
 function mouseClicked() {
@@ -84,11 +86,10 @@ function mouseClicked() {
 
 function draw() { // Game loop
     if (ganhou) {
-		requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+            reset();
             alert("Você ganhou!!!");
-            embaralha(1000);
         });
-        ganhou = false;
-	}
-    renderiza();
+    }
+    renderizaTabuleiro();
 }
