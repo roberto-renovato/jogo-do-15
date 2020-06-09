@@ -1,11 +1,14 @@
 var TAMANHO = 100;
-var tabuleiro = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]];
-var referencia = JSON.stringify(tabuleiro);
+var tabuleiro = [[ 1, 2, 3, 4],
+                 [ 5, 6, 7, 8],
+                 [ 9,10,11,12],
+                 [13,14,15, 0]];
+var REFERENCIA = JSON.stringify(tabuleiro); // "[[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,0]]"
 var vazioI = vazioJ = 3;
 var ganhou = false;
 
 function dentroTabuleiro(i, j) {
-    return i >= 0 && i <=3 && j >= 0 && j <=3;
+    return i >= 0 && i <= 3 && j >= 0 && j <= 3;
 }
 
 function vazio(i, j) {
@@ -23,9 +26,9 @@ function mexe(i, j) {
     vazioJ = j;
 }
 
-function embaralha(vezes) {
+function embaralha() {
     var randomI, randomJ, vertical, ultimoMexido;
-    for (var i = 0; i < vezes; i++) {
+    for (var i = 0; i < 10; i++) {
         randomI = randomJ = undefined;
         vertical = random([true, false]);
         if (vertical) {
@@ -65,14 +68,9 @@ function renderizaTabuleiro() {
     }
 }
 
-function reset() {
-    ganhou = false;
-    embaralha(1000);
-}
-
 function setup() {
     createCanvas(TAMANHO * 4 + 1, TAMANHO * 4 + 1);
-    reset();
+    embaralha();
 }
 
 function mouseClicked() {
@@ -80,16 +78,17 @@ function mouseClicked() {
     var j = floor(mouseX / TAMANHO);
     if (dentroTabuleiro(i, j) && vazioAdjacente(i, j)) {
         mexe(i, j);
-        ganhou = JSON.stringify(tabuleiro) === referencia;
+        ganhou = JSON.stringify(tabuleiro) === REFERENCIA;
     }
 }
 
 function draw() { // Game loop
+    renderizaTabuleiro();
     if (ganhou) {
         requestAnimationFrame(function () {
-            reset();
             alert("Você ganhou!!!");
+            ganhou = false;
+            embaralha();
         });
     }
-    renderizaTabuleiro();
 }
